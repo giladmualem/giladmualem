@@ -3,7 +3,7 @@ package entites;
 import java.util.List;
 
 public class Companies {
-    private long id;
+    private Long id;
     private String name;
     private String email;
     private String password;
@@ -28,7 +28,7 @@ public class Companies {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -66,7 +66,7 @@ public class Companies {
 
     @Override
     public String toString() {
-        return "Companies{" +
+        return "Company{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +

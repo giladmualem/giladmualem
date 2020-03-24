@@ -1,0 +1,93 @@
+package dao.DBDAO;
+
+import dao.DAO.CategoryDAO;
+import entites.Category;
+import pool.ConnectionPool;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+public class CategoryDBDAO implements CategoryDAO {
+
+    private ConnectionPool pool;
+
+    public CategoryDBDAO() {
+        pool = ConnectionPool.getInstance();
+    }
+
+    @Override
+    public Boolean isExist(Category category) {
+        Boolean isExist = false;
+        Connection connection = null;
+        String sql = "SELECT * FROM categories WHERE NAME= ?";
+        try {
+            connection = pool.getConnection();
+            PreparedStatement prstm = connection.prepareStatement(sql);
+            prstm.setString(1, category.name());
+            ResultSet resultSet = prstm.executeQuery();
+            if (resultSet.next()) {
+                isExist = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            pool.returnConnetion(connection);
+        }
+        return isExist;
+    }
+
+    @Override
+    public void addCategory(Category category) {
+        Connection connection = null;
+        String sql = "INSERT INTO categories (NAME ) VALUES (?)";
+        try {
+            connection = pool.getConnection();
+            PreparedStatement prstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            prstm.setString(1, category.name());
+            prstm.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            pool.returnConnetion(connection);
+        }
+    }
+
+    @Override
+    public Long getIdCategory(Category category) {
+        Connection connection = null;
+        String sql = "SELECT * FROM categories WHERE NAME= ?";
+        Long id = null;
+        try {
+            connection = pool.getConnection();
+            PreparedStatement prstm = connection.prepareStatement(sql);
+            prstm.setString(1, category.name());
+            ResultSet resultSet = prstm.executeQuery();
+            if (resultSet.next()) {
+                id = resultSet.getLong("ID");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            pool.returnConnetion(connection);
+        }
+        return id;
+    }
+
+    @Override
+    public void deleteCategory(Long id) {
+        Connection connection = null;
+        String sql = "DELETE FROM categories WHERE ID= ?";
+        try {
+            connection = pool.getConnection();
+            PreparedStatement prstm = connection.prepareStatement(sql);
+            prstm.setLong(1, id);
+            prstm.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            pool.returnConnetion(connection);
+        }
+    }
+}

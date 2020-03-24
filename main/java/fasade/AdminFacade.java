@@ -1,25 +1,16 @@
 package fasade;
 
-import dao.CompaniesDAO;
-import dao.CompaniesDBDAO;
-import dao.CouponsDBDAO;
-import dao.CustomersDBDAO;
+import dao.DBDAO.CompaniesDBDAO;
+import dao.DBDAO.CouponsDBDAO;
+import dao.DBDAO.CustomersDBDAO;
 import entites.Companies;
-import entites.Customer;
 import exceptions.AlreadyExistException;
 import exceptions.NotExistException;
-import exceptions.NotLoginException;
-import pool.ConnectionPool;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class AdminFacade extends ClientFacade {
 
-    private ConnectionPool pool;
     private ArrayList<Companies> companiesDelete = null;
 
     //  constructor
@@ -28,7 +19,6 @@ public class AdminFacade extends ClientFacade {
         couponsDAO = new CouponsDBDAO();
         customersDAO = new CustomersDBDAO();
         login(email, password);
-        pool = ConnectionPool.getInstance();
     }
 
     //login Boolean(String email,String password)
@@ -40,127 +30,45 @@ public class AdminFacade extends ClientFacade {
         return isLogin;
     }
 
+    private void doExist(Companies company) throws AlreadyExistException {
+    }
+
     //  not double email
     //  not double name
-    //public void addCompany(Companies companies)
-    public void addCompany(Companies companies) throws NotLoginException, AlreadyExistException {
-        if (!isLogin) throw new NotLoginException("you need to login");
-        Boolean byName = isNameCompanyExists(companies.getName());
-        Boolean byMail = isEmailCompanyExists(companies.getEmail());
-        if (byMail || byName) {
-            throw new AlreadyExistException("the email or the name Company is already taken");
+    //public void addCompany(Companies company)
+    public void addCompany(Companies company) throws AlreadyExistException {
+        CompaniesDBDAO companiesDBDAO = new CompaniesDBDAO();
+        if (companiesDAO.isCompanyExists(company.getEmail(), company.getPassword()) != null) {
+            throw new AlreadyExistException("this company is already exist");
         }
-        System.out.println(companiesDAO.addCompany(companies));
-    }
-
-    public Boolean isNameCompanyExists(String name) {
-        return isCompanyExistsWith("SELECT ID FROM coupons.companies WHERE NAME=?", name);
-    }
-
-    public Boolean isEmailCompanyExists(String email) {
-        return isCompanyExistsWith("SELECT ID FROM coupons.companies WHERE EMAIL=?", email);
-    }
-
-    public Boolean isCompanyExistsWith(String sql, String val) {
-        Boolean isExist = false;
-        Connection connection = pool.getConnection();
-        try (PreparedStatement prstm = connection.prepareStatement(sql)) {
-            prstm.setString(1, val);
-            ResultSet resultSet = prstm.executeQuery();
-            if (resultSet.next()) {
-                isExist = true;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            pool.returnConnetion(connection);
+        if (companiesDBDAO.isNameCompanyExists(company.getName())) {
+            throw new AlreadyExistException("this company name is already taken");
         }
-        return isExist;
+        if (companiesDBDAO.isEmailCompanyExists(company.getEmail())) {
+            throw new AlreadyExistException("this company email is already taken");
+        }
+        companiesDAO.addCompany(company);
     }
-
 
     //  not update id
     //  not update name
-    //public void updateCompany(Companies companies)
-    public void updateCompany(Companies companies) throws NotExistException {
-        if (!isValid(companies)) {
-            return;
+    //public void updateCompany(Companies company)
+    public void updateCompany(Companies company) throws NotExistException {
+        Companies com = companiesDAO.getOneCompany(company.getId());
+        if (com == null) {
+            throw new NotExistException("there is not such a company");
         }
-        if (confirmedCompany(companies.getId(), companies.getName())) {
-            companiesDAO.updateCompany(companies);
-        } else {
-            throw new NotExistException("you put a wrong id or name company");
-        }
-    }
-
-    public Boolean confirmedCompany(Long id, String name) {
-        Boolean isExist = null;
-        String sql = "SELECT * FROM coupons.companies WHERE ID=? AND NAME=?";
-        Connection connection = pool.getConnection();
-        try (PreparedStatement prstm = connection.prepareStatement(sql)) {
-            prstm.setLong(1, id);
-            prstm.setString(2, name);
-            ResultSet resultSet = prstm.executeQuery();
-            if (resultSet.next()) {
-                isExist = true;
-            } else {
-                isExist = false;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            pool.returnConnetion(connection);
-        }
-        return isExist;
-    }
-
-    public Boolean isValid(Companies companies) {
-        Boolean valid = true;
-        if (companies == null ||
-                companies.getEmail().isEmpty() ||
-                companies.getPassword().isEmpty() ||
-                companies.getName().isEmpty()) {
-            valid = false;
-        }
-        return valid;
+        com.setEmail(company.getEmail());
+        com.setPassword(company.getPassword());
+        companiesDAO.updateCompany(com);
     }
 
     //  delete coupones company
     //  delete coupones customers
     //public void deleteCompany(Companies companies)
-    public void deleteCompany(Companies companies) {
-        try {
-            companiesDAO.deletCompany(companies.getId());
-            if (companiesDelete == null) {
-                //  save the delete company
-                companiesDelete = new ArrayList<>();
-            }
-            companiesDelete.add(companies);
-        } catch (NotExistException e) {
-            e.printStackTrace();
-        }
-    }
 
     //  get back all delete componies
-    public void getBackAllDeleteComponies() {
-        for (Companies companies : companiesDelete) {
-            String name = companies.getName();
-            String email = companies.getEmail();
-            String password = companies.getPassword();
-            Companies company = new Companies(name, email, password);
-            try {
-                companiesDAO.addCompany(company);
-            } catch (AlreadyExistException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     //  get back one delete compony (id)
-    public void getBackOneDeleteCompany(Long id) {
-
-    }
-
     //public ArrayList<Companies> getAllCompanies()
     //public Companies getOneCompany(Long companyId)
     //public void addCustomer(Customer customer)
@@ -168,5 +76,4 @@ public class AdminFacade extends ClientFacade {
     //public void deleteCustomer(Long customerId)
     //public ArrayList<Customer> getAllCustomers()
     //public Customer getOneCustomer(Long customerId)
-
 }

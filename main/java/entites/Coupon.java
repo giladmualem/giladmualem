@@ -1,11 +1,10 @@
 package entites;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public class Coupon {
     private long id;
-    private long companeyId;
+    private long companyId;
     private long categoryId;
     private String title;
     private String description;
@@ -16,9 +15,9 @@ public class Coupon {
     private String image;
 
 
-    public Coupon(long id, long companeyId, long categoryId, String title, String description, LocalDate startDate, LocalDate endDate, int amount, double price, String image) {
+    public Coupon(long id, long companyId, long categoryId, String title, String description, LocalDate startDate, LocalDate endDate, int amount, double price, String image) {
         this.id = id;
-        this.companeyId = companeyId;
+        this.companyId = companyId;
         this.categoryId = categoryId;
         this.title = title;
         this.description = description;
@@ -29,8 +28,8 @@ public class Coupon {
         this.image = image;
     }
 
-    public Coupon(long companeyId, long categoryId, String title, String description, LocalDate startDate, LocalDate endDate, int amount, double price, String image) {
-        this.companeyId = companeyId;
+    public Coupon(long companyId, long categoryId, String title, String description, LocalDate startDate, LocalDate endDate, int amount, double price, String image) {
+        this.companyId = companyId;
         this.categoryId = categoryId;
         this.title = title;
         this.description = description;
@@ -50,12 +49,12 @@ public class Coupon {
         this.id = id;
     }
 
-    public long getCompaneyId() {
-        return companeyId;
+    public long getCompanyId() {
+        return companyId;
     }
 
-    public void setCompaneyId(long companeyId) {
-        this.companeyId = companeyId;
+    public void setCompanyId(long companyId) {
+        this.companyId = companyId;
     }
 
     public long getCategoryId() {
@@ -126,7 +125,7 @@ public class Coupon {
     public String toString() {
         return "Coupon{" +
                 "id=" + id +
-                ", companeyId=" + companeyId +
+                ", companyId=" + companyId +
                 ", categoryId=" + categoryId +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +

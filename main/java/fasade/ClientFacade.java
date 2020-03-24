@@ -1,8 +1,8 @@
 package fasade;
 
-import dao.CompaniesDAO;
-import dao.CouponsDAO;
-import dao.CustomersDAO;
+import dao.DAO.CompaniesDAO;
+import dao.DAO.CouponsDAO;
+import dao.DAO.CustomersDAO;
 
 public abstract class ClientFacade {
     protected CompaniesDAO companiesDAO;
