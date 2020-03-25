@@ -1,18 +1,30 @@
 package fasade;
 
-import entites.Companies;
 import entites.Coupon;
 
-import java.util.ArrayList;
+import java.util.Objects;
+import java.util.function.Predicate;
 
 public class CompanyFacade extends ClientFacade {
-    @Override
-    public Boolean login(String email, String password) {
-        return null;
-    }
-    //constractor
+
+    private Long companyId;
+
+    private Predicate<Long> isLoggedIn = Objects::nonNull;
+
     //login
-    //public void addCoupon(Coupon coupon)
+    @Override
+    public boolean login(String email, String password) {
+        if (!companiesDBDAO.isCompanyExists(email, password)) return false;
+        companyId = companiesDBDAO.getByEmailAndPassword(email, password).getId();
+        return true;
+    }
+
+    // if coupon exist (name and com_id)
+    public void addCoupon(Coupon coupon) {
+        if (!isLoggedIn.test(companyId)) {
+        }
+    }
+
     //public void updateCoupon(Coupon coupon)
     //public void deleteCoupon(Long CouponId)
     //public ArrayList<Coupon>getCompanyCoupons()

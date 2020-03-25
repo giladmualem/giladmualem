@@ -121,6 +121,30 @@ public class CompaniesDBDAO implements CompaniesDAO {
         return all;
     }
 
+    public Companies getByEmailAndPassword(String email, String password) {
+        Companies company = null;
+        Connection connection = pool.getConnection();
+        String sql = "SELECT * FROM  companies WHERE EMAIL = ? AND PASSWORD = ?";
+        try (PreparedStatement prstm = connection.prepareStatement(sql)) {
+
+            prstm.setString(1, email);
+            prstm.setString(2, password);
+            ResultSet resultSet = prstm.executeQuery();
+            if (resultSet.next()) {
+                long id = resultSet.getLong(1);
+                String name = resultSet.getString(2);
+                company = new Companies(id, name, email, password);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            pool.returnConnetion(connection);
+        }
+        return company;
+    }
+
+
     @Override
     public Companies getOneCompany(Long id) {
         Companies company = null;
@@ -144,6 +168,30 @@ public class CompaniesDBDAO implements CompaniesDAO {
         }
         return company;
     }
+
+    public Companies getOneCompany(String name) {
+        Companies company = null;
+        Connection connection = null;
+        String sql = "SELECT * FROM  companies WHERE NAME= ?";
+        try {
+            connection = pool.getConnection();
+            PreparedStatement prstm = connection.prepareStatement(sql);
+            prstm.setString(1, name);
+            ResultSet resultSet = prstm.executeQuery();
+            if (resultSet.next()) {
+                Long id = resultSet.getLong("ID");
+                String email = resultSet.getString("EMAIL");
+                String password = resultSet.getString("PASSWORD");
+                company = new Companies(id, name, email, password);
+            }
+        } catch (Exception e) {
+
+        } finally {
+            pool.returnConnetion(connection);
+        }
+        return company;
+    }
+
     public Boolean isNameCompanyExists(String name) {
         Boolean isExist = false;
         String sql = "SELECT * FROM companies WHERE NAME =? ";
@@ -163,6 +211,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
         }
         return isExist;
     }
+
     public Boolean isEmailCompanyExists(String email) {
         Boolean isExist = false;
         String sql = "SELECT * FROM companies WHERE EMAIL=?";

@@ -17,4 +17,5 @@ public interface CompaniesDAO {
 
     Companies getOneCompany(Long id);
 
+
 }

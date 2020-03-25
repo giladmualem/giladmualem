@@ -22,6 +22,7 @@ public class CouponsDBDAO implements CouponsDAO {
         pool = ConnectionPool.getInstance();
     }
 
+    // if coupon dont exist
     @Override
     public void addCoupon(Coupon coupon) {
         Connection connection = null;
@@ -48,8 +49,30 @@ public class CouponsDBDAO implements CouponsDAO {
         }
     }
 
+
     @Override
     public void update(Coupon coupon) {
+        Connection connection=null;
+        String sql = "UPDATE coupons SET CAT_ID= ?, TITEL= ?, DESERIPTION= ?, " +
+                "SDATE= ?, EDATE= ?, AMOUNT= ?, PRICE= ?, IMAGE= ? WHERE ID= ?";
+        try {
+         connection = pool.getConnection();
+            PreparedStatement prsmt = connection.prepareStatement(sql);
+            prsmt.setLong(1, coupon.getCategoryId());
+            prsmt.setString(2, coupon.getTitle());
+            prsmt.setString(3, coupon.getDescription());
+            prsmt.setDate(4, Date.valueOf(coupon.getStartDate()));
+            prsmt.setDate(5, Date.valueOf(coupon.getEndDate()));
+            prsmt.setInt(6, coupon.getAmount());
+            prsmt.setDouble(7, coupon.getPrice());
+            prsmt.setString(8, coupon.getImage());
+            prsmt.setLong(9, coupon.getId());
+            prsmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            pool.returnConnetion(connection);
+        }
 
     }
 
@@ -179,33 +202,6 @@ public class CouponsDBDAO implements CouponsDAO {
 //        }
 //        return exist;
 //    }
-//
-//    @Override
-//    public void addCoupon(Coupon coupon) throws AlreadyExistException {
-//        if (isCouponExist(coupon)) throw new AlreadyExistException("this coupon already exist");
-//
-    //        String sql = "INSERT INTO coupons.coupons " + "" +
-    //                "(COMPANY_ID,CATGORY_ID,TITEL,COUPON_DESCRIPTION,START_DATE,END_DATE,AMOUNT,PRICE,IMAGE)" +
-    //                "VALUES(?,?,?,?,?,?,?,?,?)";
-//        Connection connection = pool.getConnection();
-//        try (PreparedStatement prstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-//            prstm.setLong(1, coupon.getCompanyId());
-//            prstm.setLong(2, coupon.getCategoryId());
-//            prstm.setString(3, coupon.getTitle());
-//            prstm.setString(4, coupon.getDescription());
-//            prstm.setDate(5, Date.valueOf(coupon.getStartDate()));
-//            prstm.setDate(6, Date.valueOf(coupon.getEndDate()));
-//            prstm.setInt(7, coupon.getAmount());
-//            prstm.setDouble(8, coupon.getPrice());
-//            prstm.setString(9, coupon.getImage());
-//            prstm.executeUpdate();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            pool.returnConnetion(connection);
-//        }
-//    }
-//
 //    @Override
 //    public void update(Coupon coupon) throws NotExistException {
 //        if (!isCouponExist(coupon)) {
