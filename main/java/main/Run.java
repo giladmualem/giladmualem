@@ -3,12 +3,15 @@ package main;
 import dao.DAO.CategoryDAO;
 import dao.DAO.CompaniesDAO;
 import dao.DAO.CouponsDAO;
+import dao.DAO.CustomersDAO;
 import dao.DBDAO.CategoryDBDAO;
 import dao.DBDAO.CompaniesDBDAO;
 import dao.DBDAO.CouponsDBDAO;
+import dao.DBDAO.CustomersDBDAO;
 import entites.Category;
 import entites.Companies;
 import entites.Coupon;
+import entites.Customer;
 import exceptions.AlreadyExistException;
 import exceptions.NotExistException;
 import fasade.AdminFacade;
@@ -20,17 +23,19 @@ import java.util.List;
 public class Run {
     public static void main(String[] args) {
         ConnectionPool pool = ConnectionPool.getInstance();
-
-        CouponsDAO daoCou=new CouponsDBDAO();
-        CompaniesDBDAO companiesDBDAO=new CompaniesDBDAO();
-        Companies company=companiesDBDAO.getOneCompany(2L);
-        company.setCoupons(((CouponsDBDAO) daoCou).getAllCompnyCoupons(company.getId()));
-        for(Coupon coupon:company.getCoupons()){
-            System.out.println(coupon);
-        }
-
+        CustomersDAO customersDAO = new CustomersDBDAO();
+        List <Customer>a=customersDAO.allCustomer();
+        for (Customer customer:a)
+        System.out.println(customer);
         pool.closeConnection();
 
+//        CouponsDAO daoCou=new CouponsDBDAO();
+//        CompaniesDBDAO companiesDBDAO=new CompaniesDBDAO();
+//        Companies company=companiesDBDAO.getOneCompany(2L);
+//        company.setCoupons(((CouponsDBDAO) daoCou).getAllCompnyCoupons(company.getId()));
+//        for(Coupon coupon:company.getCoupons()){
+//            System.out.println(coupon);
+//        }
 //        LocalDate t=LocalDate.now();
 //        List <Coupon>all=daoCou.getAllCoupons();
 //        for(Coupon a:all){
