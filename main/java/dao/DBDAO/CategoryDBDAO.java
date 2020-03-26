@@ -20,11 +20,9 @@ public class CategoryDBDAO implements CategoryDAO {
     @Override
     public Boolean isExist(Category category) {
         Boolean isExist = false;
-        Connection connection = null;
         String sql = "SELECT * FROM categories WHERE NAME= ?";
-        try {
-            connection = pool.getConnection();
-            PreparedStatement prstm = connection.prepareStatement(sql);
+        Connection connection = pool.getConnection();
+        try (PreparedStatement prstm = connection.prepareStatement(sql)) {
             prstm.setString(1, category.name());
             ResultSet resultSet = prstm.executeQuery();
             if (resultSet.next()) {
@@ -40,11 +38,9 @@ public class CategoryDBDAO implements CategoryDAO {
 
     @Override
     public void addCategory(Category category) {
-        Connection connection = null;
         String sql = "INSERT INTO categories (NAME ) VALUES (?)";
-        try {
-            connection = pool.getConnection();
-            PreparedStatement prstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        Connection connection = pool.getConnection();
+        try (PreparedStatement prstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             prstm.setString(1, category.name());
             prstm.executeUpdate();
         } catch (Exception e) {
@@ -56,12 +52,10 @@ public class CategoryDBDAO implements CategoryDAO {
 
     @Override
     public Long getIdCategory(Category category) {
-        Connection connection = null;
-        String sql = "SELECT * FROM categories WHERE NAME= ?";
         Long id = null;
-        try {
-            connection = pool.getConnection();
-            PreparedStatement prstm = connection.prepareStatement(sql);
+        String sql = "SELECT * FROM categories WHERE NAME= ?";
+        Connection connection = pool.getConnection();
+        try (PreparedStatement prstm = connection.prepareStatement(sql)) {
             prstm.setString(1, category.name());
             ResultSet resultSet = prstm.executeQuery();
             if (resultSet.next()) {
@@ -77,11 +71,9 @@ public class CategoryDBDAO implements CategoryDAO {
 
     @Override
     public void deleteCategory(Long id) {
-        Connection connection = null;
         String sql = "DELETE FROM categories WHERE ID= ?";
-        try {
-            connection = pool.getConnection();
-            PreparedStatement prstm = connection.prepareStatement(sql);
+        Connection connection = pool.getConnection();
+        try (PreparedStatement prstm = connection.prepareStatement(sql)) {
             prstm.setLong(1, id);
             prstm.executeUpdate();
         } catch (Exception e) {

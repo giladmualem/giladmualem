@@ -20,17 +20,32 @@ import java.util.List;
 public class Run {
     public static void main(String[] args) {
         ConnectionPool pool = ConnectionPool.getInstance();
-        CompaniesDAO daoCom = new CompaniesDBDAO();
+
         CouponsDAO daoCou=new CouponsDBDAO();
-        Companies com = daoCom.getOneCompany(2L);
-        CategoryDAO daoCat=new CategoryDBDAO();
-        if(!daoCat.isExist(Category.FOOD)){
-            daoCat.addCategory(Category.FOOD);
+        CompaniesDBDAO companiesDBDAO=new CompaniesDBDAO();
+        Companies company=companiesDBDAO.getOneCompany(2L);
+        company.setCoupons(((CouponsDBDAO) daoCou).getAllCompnyCoupons(company.getId()));
+        for(Coupon coupon:company.getCoupons()){
+            System.out.println(coupon);
         }
-        Coupon cou=new Coupon(com.getId(),daoCat.getIdCategory(Category.FOOD),"6 pack","get 2 pack free", LocalDate.now(),LocalDate.now().plusDays(7),100,20.5,"url/..img");
-        daoCou.addCoupon(cou);
 
         pool.closeConnection();
+
+//        LocalDate t=LocalDate.now();
+//        List <Coupon>all=daoCou.getAllCoupons();
+//        for(Coupon a:all){
+//            System.out.println(a);
+//        }
+
+//        Coupon coupon=new Coupon(2,2,"12pack","12 pack of cola",t,t.plusDays(4),50,35.0,"url...");
+//        daoCou.addCoupon(coupon);
+
+//        Coupon cou=daoCou.getOneCoupon(1);
+//        daoCou.delete(1);
+//        CompaniesDAO daoCom = new CompaniesDBDAO();
+//        Companies com = daoCom.getOneCompany(2L);
+//        daoCou.addCoupon(cou);
+
 //        dao1.deleteCategory(dao1.getIdCategory(Category.FOOD));
 //        AdminFacade facade=new AdminFacade("admin@admin.com","admin");
 //        Companies com = new Companies(7,"zer4u", "zer4u@.co.il", "fff");

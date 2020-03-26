@@ -14,11 +14,11 @@ public class AdminFacade extends ClientFacade {
 
     private ArrayList<Companies> companiesDelete = null;
 
-    private boolean isLogin = false;
+    private Boolean isLogin = false;
 
     //login Boolean(String email,String password)
     @Override
-    public boolean login(String email, String password) {
+    public Boolean login(String email, String password) {
         String theEmail = "admin@admin.com";
         String thePassword = "admin";
         isLogin = (email.equals(theEmail) && password.equals(thePassword));

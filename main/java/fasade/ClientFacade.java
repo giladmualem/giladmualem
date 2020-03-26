@@ -18,5 +18,5 @@ public abstract class ClientFacade {
         this.couponsDAO = new CouponsDBDAO();
     }
 
-    public abstract boolean login(String email, String password);
+    public abstract Boolean login(String email, String password);
 }
