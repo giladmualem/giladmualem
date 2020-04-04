@@ -3,6 +3,7 @@ package dao.DBDAO;
 import dao.DAO.CouponsDAO;
 import entites.Category;
 import entites.Coupon;
+import entites.Customer;
 import exceptions.AlreadyExistException;
 import exceptions.CouponEmptyException;
 import exceptions.DoubelCouponsException;
