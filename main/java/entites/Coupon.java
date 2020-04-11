@@ -3,9 +3,9 @@ package entites;
 import java.time.LocalDate;
 
 public class Coupon {
-    private long id;
-    private long companyId;
-    private long categoryId;
+    private Long id;
+    private Long companyId;
+    private Long categoryId;
     private String title;
     private String description;
     private LocalDate startDate;
@@ -15,7 +15,7 @@ public class Coupon {
     private String image;
 
 
-    public Coupon(long id, long companyId, long categoryId, String title, String description, LocalDate startDate, LocalDate endDate, int amount, double price, String image) {
+    public Coupon(Long id, Long companyId, Long categoryId, String title, String description, LocalDate startDate, LocalDate endDate, int amount, double price, String image) {
         this.id = id;
         this.companyId = companyId;
         this.categoryId = categoryId;
@@ -28,7 +28,7 @@ public class Coupon {
         this.image = image;
     }
 
-    public Coupon(long companyId, long categoryId, String title, String description, LocalDate startDate, LocalDate endDate, int amount, double price, String image) {
+    public Coupon(Long companyId, Long categoryId, String title, String description, LocalDate startDate, LocalDate endDate, int amount, double price, String image) {
         this.companyId = companyId;
         this.categoryId = categoryId;
         this.title = title;
@@ -41,15 +41,15 @@ public class Coupon {
     }
 
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public long getCompanyId() {
+    public Long getCompanyId() {
         return companyId;
     }
 
@@ -57,11 +57,11 @@ public class Coupon {
         this.companyId = companyId;
     }
 
-    public long getCategoryId() {
+    public Long getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(long categoryId) {
+    public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
     }
 

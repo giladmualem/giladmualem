@@ -1,5 +1,6 @@
 package entites;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Companies {
@@ -7,7 +8,7 @@ public class Companies {
     private String name;
     private String email;
     private String password;
-    private List<Coupon> coupons;
+    private ArrayList<Coupon> coupons;
 
     public Companies(long id, String name, String email, String password) {
         this.id = id;
@@ -60,7 +61,7 @@ public class Companies {
         return coupons;
     }
 
-    public void setCoupons(List<Coupon> coupons) {
+    public void setCoupons(ArrayList<Coupon> coupons) {
         this.coupons = coupons;
     }
 

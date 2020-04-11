@@ -14,9 +14,9 @@ public interface CustomersDAO {
 
     void updateCustomer(Customer customer);
 
-    void deleteCustomer(long customerID);
+    void deleteCustomer(Long customerID);
 
     List<Customer> allCustomer();
 
-    Customer getOneCustomer(long customerID);
+    Customer getOneCustomer(Long customerID);
 }

@@ -75,7 +75,7 @@ public class CustomersDBDAO implements CustomersDAO {
     }
 
     @Override
-    public void deleteCustomer(long customerID) {
+    public void deleteCustomer(Long customerID) {
         String sql = "DELETE FROM customers WHERE ID=?;";
         Connection connection = pool.getConnection();
         try (PreparedStatement prstm = connection.prepareStatement(sql)) {
@@ -89,8 +89,8 @@ public class CustomersDBDAO implements CustomersDAO {
     }
 
     @Override
-    public List<Customer> allCustomer() {
-        List<Customer> all = null;
+    public ArrayList<Customer> allCustomer() {
+        ArrayList<Customer> all = null;
         String sql = "SELECT * FROM customers ";
         Connection connection = pool.getConnection();
         try (PreparedStatement prsmt = connection.prepareStatement(sql)) {
@@ -114,7 +114,7 @@ public class CustomersDBDAO implements CustomersDAO {
     }
 
     @Override
-    public Customer getOneCustomer(long customerID) {
+    public Customer getOneCustomer(Long customerID) {
         Customer customer = null;
         String sql = "SELECT * FROM coupons.customers WHERE ID = ?";
         Connection connection = pool.getConnection();
@@ -134,5 +134,46 @@ public class CustomersDBDAO implements CustomersDAO {
             pool.returnConnetion(connection);
         }
         return customer;
+    }
+
+    public Customer getOneCustomer(String email, String password) {
+        Customer customer = null;
+        String sql = "SELECT * FROM coupons.customers WHERE EMAIL = ? AND PASSWORD = ?";
+        Connection connection = pool.getConnection();
+        try (PreparedStatement prsmt = connection.prepareStatement(sql)) {
+            prsmt.setString(1, email);
+            prsmt.setString(2, password);
+            ResultSet resultSet = prsmt.executeQuery();
+            if (resultSet.next()) {
+                Long id = resultSet.getLong("ID");
+                String firstName = resultSet.getString("FNAME");
+                String lastName = resultSet.getString("LNAME");
+                customer = new Customer(id, firstName, lastName, email, password);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            pool.returnConnetion(connection);
+        }
+        return customer;
+    }
+
+    public Boolean isCustemerExistByEmail(String email) {
+        Boolean isExits = false;
+        String sql = "SELECT * FROM customers WHERE EMAIL=? ";
+        Connection connection = pool.getConnection();
+        try (PreparedStatement prsmt = connection.prepareStatement(sql)) {
+            prsmt.setString(1, email);
+            ResultSet resultSet = prsmt.executeQuery();
+            if (resultSet.next()) {
+                isExits = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            pool.returnConnetion(connection);
+        }
+        return isExits;
+
     }
 }

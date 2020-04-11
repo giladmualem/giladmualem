@@ -7,6 +7,7 @@ import pool.ConnectionPool;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class CompaniesDBDAO implements CompaniesDAO {
 
@@ -88,8 +89,8 @@ public class CompaniesDBDAO implements CompaniesDAO {
     }
 
     @Override
-    public List<Companies> getAllCompanies() {
-        List<Companies> all = null;
+    public ArrayList<Companies> getAllCompanies() {
+        ArrayList<Companies> all = null;
         String sql = "SELECT * FROM companies";
         Connection connection = pool.getConnection();
         try (PreparedStatement prstm = connection.prepareStatement(sql)) {
@@ -130,6 +131,10 @@ public class CompaniesDBDAO implements CompaniesDAO {
             pool.returnConnetion(connection);
         }
         return company;
+    }
+
+    public Optional<Companies> findById(Long id) {
+        return Optional.ofNullable(getOneCompany(id));
     }
 
 

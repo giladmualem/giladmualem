@@ -11,9 +11,9 @@ import java.util.List;
 public interface CouponsDAO {
     void addCoupon(Coupon coupon);
     void update(Coupon coupon);
-    void delete (long couponId);
+    void delete (Long couponId);
     List<Coupon>getAllCoupons();
-    Coupon getOneCoupon(long couponId);
-    void addCouponPurchase(long customerId,long couponId) ;
-    void deleteCouponPurchase(long customerId,long couponId) ;
+    Coupon getOneCoupon(Long couponId);
+    //void addCouponPurchase(Long customerId,Long couponId) ;
+    //void deleteCouponPurchase(Long customerId,Long couponId) ;
 }

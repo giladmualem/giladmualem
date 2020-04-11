@@ -1,14 +1,15 @@
 package entites;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Customer {
-    private long id;
+    private Long id;
     private String firstName;
     private String lastName;
     private String email;
     private String password;
-    private List<Coupon> coupons;
+    private ArrayList<Coupon> coupons;
 
     public Customer(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
@@ -18,7 +19,7 @@ public class Customer {
         this.coupons=null;
     }
 
-    public Customer(long id, String firstName, String lastName, String email, String password) {
+    public Customer(Long id, String firstName, String lastName, String email, String password) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -31,7 +32,7 @@ public class Customer {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -67,11 +68,11 @@ public class Customer {
         this.password = password;
     }
 
-    public List<Coupon> getCoupons() {
+    public ArrayList<Coupon> getCoupons() {
         return coupons;
     }
 
-    public void setCoupons(List<Coupon> coupons) {
+    public void setCoupons(ArrayList<Coupon> coupons) {
         this.coupons = coupons;
     }
 
