@@ -9,7 +9,7 @@ public class Customer {
     private String lastName;
     private String email;
     private String password;
-    private ArrayList<Coupon> coupons;
+    private List<Coupon> coupons;
 
     public Customer(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
@@ -28,7 +28,7 @@ public class Customer {
         this.coupons=null;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -68,11 +68,11 @@ public class Customer {
         this.password = password;
     }
 
-    public ArrayList<Coupon> getCoupons() {
+    public List<Coupon> getCoupons() {
         return coupons;
     }
 
-    public void setCoupons(ArrayList<Coupon> coupons) {
+    public void setCoupons(List<Coupon> coupons) {
         this.coupons = coupons;
     }
 

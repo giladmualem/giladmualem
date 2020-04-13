@@ -40,7 +40,7 @@ public class CouponsDBDAO implements CouponsDAO {
             prstm.setDate(6, Date.valueOf(coupon.getEndDate()));
             prstm.setInt(7, coupon.getAmount());
             prstm.setDouble(8, coupon.getPrice());
-            prstm.setString(9, coupon.getDescription());
+            prstm.setString(9, coupon.getImage());
             prstm.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -118,8 +118,8 @@ public class CouponsDBDAO implements CouponsDAO {
     }
 
     @Override
-    public ArrayList<Coupon> getAllCoupons() {
-        ArrayList<Coupon> all = null;
+    public List<Coupon> getAllCoupons() {
+        List<Coupon> all = null;
         String sql = "SELECT * FROM coupons";
         Connection connection = pool.getConnection();
         try (PreparedStatement prstm = connection.prepareStatement(sql)) {
@@ -146,8 +146,68 @@ public class CouponsDBDAO implements CouponsDAO {
         return all;
     }
 
-    public ArrayList<Coupon> getAllCompnyCoupons(Long com_id) {
-        ArrayList<Coupon> allCouponCompny = null;
+    public List<Coupon> getAllCompnyCouponsByMaxPrice(Long com_id,Double maxPrice) {
+        List<Coupon> allCouponCompnyByMaxPrice = null;
+        String sql = "SELECT * FROM coupons WHERE COM_ID= ? AND PRICE <= ?";
+        Connection connection = pool.getConnection();
+        try (PreparedStatement prdtm = connection.prepareStatement(sql)) {
+            prdtm.setLong(1,com_id);
+            prdtm.setDouble(2,maxPrice);
+            ResultSet resultSet = prdtm.executeQuery();
+            allCouponCompnyByMaxPrice = new ArrayList<>();
+            while (resultSet.next()) {
+                long idCoupon = resultSet.getLong(1);
+                //long com = resultSet.getLong(2);
+                long cat = resultSet.getLong(3);
+                String titel = resultSet.getString(4);
+                String description = resultSet.getString(5);
+                LocalDate start = resultSet.getDate(6).toLocalDate();
+                LocalDate end = resultSet.getDate(7).toLocalDate();
+                int amount = resultSet.getInt(8);
+                double price = resultSet.getDouble(9);
+                String image = resultSet.getString(10);
+                allCouponCompnyByMaxPrice.add(new Coupon(idCoupon, com_id, cat, titel, description, start, end, amount, price, image));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            pool.returnConnetion(connection);
+        }
+        return allCouponCompnyByMaxPrice;
+    }
+
+    public List<Coupon> getAllCompnyCouponsByType(Long com_id,Long categoryId) {
+        List<Coupon> allCouponCompnyType = null;
+        String sql = "SELECT * FROM coupons WHERE COM_ID= ? AND CAT_ID= ?";
+        Connection connection = pool.getConnection();
+        try (PreparedStatement prdtm = connection.prepareStatement(sql)) {
+            prdtm.setLong(1, com_id);
+            prdtm.setLong(2,categoryId);
+            ResultSet resultSet = prdtm.executeQuery();
+            allCouponCompnyType = new ArrayList<>();
+            while (resultSet.next()) {
+                long idCoupon = resultSet.getLong(1);
+                //long com = resultSet.getLong(2);
+                //long cat = resultSet.getLong(3);
+                String titel = resultSet.getString(4);
+                String description = resultSet.getString(5);
+                LocalDate start = resultSet.getDate(6).toLocalDate();
+                LocalDate end = resultSet.getDate(7).toLocalDate();
+                int amount = resultSet.getInt(8);
+                double price = resultSet.getDouble(9);
+                String image = resultSet.getString(10);
+                allCouponCompnyType.add(new Coupon(idCoupon, com_id, categoryId, titel, description, start, end, amount, price, image));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            pool.returnConnetion(connection);
+        }
+        return allCouponCompnyType;
+    }
+
+    public List<Coupon> getAllCompnyCoupons(Long com_id) {
+        List<Coupon> allCouponCompny = null;
         String sql = "SELECT * FROM coupons WHERE COM_ID= ?";
         Connection connection = pool.getConnection();
         try (PreparedStatement prdtm = connection.prepareStatement(sql)) {
@@ -165,7 +225,7 @@ public class CouponsDBDAO implements CouponsDAO {
                 int amount = resultSet.getInt(8);
                 double price = resultSet.getDouble(9);
                 String image = resultSet.getString(10);
-                allCouponCompny.add(new Coupon(com_id, com, cat, titel, description, start, end, amount, price, image));
+                allCouponCompny.add(new Coupon(idCoupon, com, cat, titel, description, start, end, amount, price, image));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -176,7 +236,7 @@ public class CouponsDBDAO implements CouponsDAO {
     }
 
 
-    public Boolean isCouponExists(Long companyId,Coupon coupon){
+    public Boolean isCouponExistsByCompanyAndTitel(Long companyId, Coupon coupon){
         Boolean isExists=false;
         String sql = "SELECT * FROM coupons WHERE COM_ID = ? AND TITEL = ?";
         Connection connection = pool.getConnection();

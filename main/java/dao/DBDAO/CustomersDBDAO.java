@@ -89,8 +89,8 @@ public class CustomersDBDAO implements CustomersDAO {
     }
 
     @Override
-    public ArrayList<Customer> allCustomer() {
-        ArrayList<Customer> all = null;
+    public List<Customer> allCustomer() {
+        List<Customer> all = null;
         String sql = "SELECT * FROM customers ";
         Connection connection = pool.getConnection();
         try (PreparedStatement prsmt = connection.prepareStatement(sql)) {

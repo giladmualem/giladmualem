@@ -89,8 +89,8 @@ public class CompaniesDBDAO implements CompaniesDAO {
     }
 
     @Override
-    public ArrayList<Companies> getAllCompanies() {
-        ArrayList<Companies> all = null;
+    public List<Companies> getAllCompanies() {
+        List<Companies> all = null;
         String sql = "SELECT * FROM companies";
         Connection connection = pool.getConnection();
         try (PreparedStatement prstm = connection.prepareStatement(sql)) {
@@ -133,9 +133,6 @@ public class CompaniesDBDAO implements CompaniesDAO {
         return company;
     }
 
-    public Optional<Companies> findById(Long id) {
-        return Optional.ofNullable(getOneCompany(id));
-    }
 
 
     @Override

@@ -55,8 +55,7 @@ public class AdminFacadeTest {
         adminFacade.login("admin@admin.com", "admin");
         //Companies com = new Companies("zer4u", "zer4u@.co.il", "ccc");
         try {
-            Companies com = adminFacade.getOneCompany(2L);
-            System.out.println(com +" deleted");
+            Companies com = adminFacade.getOneCompany(10L);
             adminFacade.deleteCompany(com);
         } catch (NotLoginException e) {
             System.out.println(e.getMessage());
@@ -118,7 +117,7 @@ public class AdminFacadeTest {
     @Test
     public void addCustomer() {
         adminFacade.login("admin@admin.com", "admin");
-        Customer customer = new Customer("eee", "ddd", "eee@gmail.co.il", "999");
+        Customer customer = new Customer("zzz", "ccc", "ss@gmail.co.il", "999");
         try {
             adminFacade.addCustomer(customer);
         } catch (NotLoginException e) {
@@ -147,8 +146,7 @@ public class AdminFacadeTest {
     public void deleteCustomer() {
         adminFacade.login("admin@admin.com", "admin");
         try {
-            adminFacade.deleteCustomer(20L);
-            adminFacade.deleteCustomer(21L);
+            adminFacade.deleteCustomer(22L);
         } catch (NotLoginException e) {
             e.printStackTrace();
         } catch (NotExistException e) {

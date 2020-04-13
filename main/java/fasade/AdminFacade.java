@@ -13,8 +13,8 @@ import java.util.function.Consumer;
 
 public class AdminFacade extends ClientFacade {
     private Boolean isLogin = false;
-    private ArrayList<Companies> deleteCompanies = null;
-    private ArrayList<Customer> deleteCustomers = null;
+    private List<Companies> deleteCompanies = null;
+    private List<Customer> deleteCustomers = null;
 
 
     //login Boolean(String email,String password)
@@ -73,18 +73,24 @@ public class AdminFacade extends ClientFacade {
         if (deleteCompanies == null) {
             deleteCompanies = new ArrayList<>();
         }
-        com.setCoupons(couponsDBDAO.getAllCompnyCoupons(companies.getId()));
+        //       com.setCoupons(couponsDBDAO.getAllCompnyCoupons(companies.getId()));
         if (com != null) {
-            for (Coupon c : com.getCoupons()) {
-
-              //  ArrayList<Long> customerId = purchaseDBDAO.customerPurchase(c.getId());
-                //customerId.forEach(x -> purchaseDBDAO.deletePurchase(x, c.getId()));
-
-                couponsDBDAO.delete(c.getId());
+//            System.out.println(com);
+            com.setCoupons(couponsDBDAO.getAllCompnyCoupons(com.getId()));
+            if (com != null) {
+                if (com.getCoupons() != null) {
+                    for (Coupon coupon : com.getCoupons()) {
+                        purchaseDBDAO.deletePurchaseCouponsByCouponId(coupon.getId());
+                        couponsDBDAO.delete(coupon.getId());
+                    }
+                    com.setCoupons(null);
+                }
+                companiesDBDAO.deleteCompany(com.getId());
+                if (deleteCompanies == null) {
+                    deleteCompanies = new ArrayList<>();
+                }
+                deleteCompanies.add(com);
             }
-
-            //deleteCompanies.add(com);
-            //companiesDBDAO.deleteCompany(com.getId());
         }
     }
 
@@ -121,7 +127,7 @@ public class AdminFacade extends ClientFacade {
     }
 
     //  get back all delete componies
-    public ArrayList<Companies> getAllCompanies() throws NotLoginException {
+    public List<Companies> getAllCompanies() throws NotLoginException {
         if (!isLogin) {
             throw new NotLoginException("you nees to login");
         }
@@ -149,7 +155,7 @@ public class AdminFacade extends ClientFacade {
             throw new NotLoginException("you need to login");
         }
         // find a customer by id
-        if (customer.getId() == 0) {
+        if (customer.getId()==null) {
             throw new NotExistException("send customer with id");
         }
         Customer orignal = customersDBDAO.getOneCustomer(customer.getId());
@@ -163,7 +169,6 @@ public class AdminFacade extends ClientFacade {
                 }
                 orignal.setEmail(customer.getEmail());
             }
-
             orignal.setFirstName(customer.getFirstName());
             orignal.setLastName(customer.getLastName());
             orignal.setPassword(customer.getPassword());
@@ -183,6 +188,7 @@ public class AdminFacade extends ClientFacade {
         Customer customer = customersDBDAO.getOneCustomer(customerId);
         if (customer != null) {
             //  delete custemer
+            purchaseDBDAO.deletePurchaseCouponsByCustomerId(customerId);
             customersDBDAO.deleteCustomer(customerId);
             //  save custemer
             if (deleteCustomers == null) {
@@ -196,11 +202,11 @@ public class AdminFacade extends ClientFacade {
     }
 
     //public ArrayList<Customer> getAllCustomers()
-    public ArrayList<Customer> getAllCustomers() throws NotLoginException {
+    public List<Customer> getAllCustomers() throws NotLoginException {
         if (!isLogin) {
             throw new NotLoginException("you need to login");
         }
-        ArrayList<Customer> all = customersDBDAO.allCustomer();
+        List<Customer> all = customersDBDAO.allCustomer();
         return null;
     }
 

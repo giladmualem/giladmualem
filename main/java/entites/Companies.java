@@ -8,7 +8,7 @@ public class Companies {
     private String name;
     private String email;
     private String password;
-    private ArrayList<Coupon> coupons;
+    private List<Coupon> coupons;
 
     public Companies(long id, String name, String email, String password) {
         this.id = id;
@@ -61,7 +61,7 @@ public class Companies {
         return coupons;
     }
 
-    public void setCoupons(ArrayList<Coupon> coupons) {
+    public void setCoupons(List<Coupon> coupons) {
         this.coupons = coupons;
     }
 

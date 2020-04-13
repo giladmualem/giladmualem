@@ -4,10 +4,7 @@ import dao.DAO.CategoryDAO;
 import dao.DAO.CompaniesDAO;
 import dao.DAO.CouponsDAO;
 import dao.DAO.CustomersDAO;
-import dao.DBDAO.CategoryDBDAO;
-import dao.DBDAO.CompaniesDBDAO;
-import dao.DBDAO.CouponsDBDAO;
-import dao.DBDAO.CustomersDBDAO;
+import dao.DBDAO.*;
 import entites.Category;
 import entites.Companies;
 import entites.Coupon;
@@ -27,12 +24,12 @@ import java.util.function.Predicate;
 
 public class Run {
     public static void main(String[] args) {
-        ConnectionPool pool = ConnectionPool.getInstance();
+        CategoryDBDAO categoryDBDAO=new CategoryDBDAO();
 
 
 
-        pool.closeConnection();
-
+//        ConnectionPool pool = ConnectionPool.getInstance();
+//        pool.closeConnection();
     }
 
 }
