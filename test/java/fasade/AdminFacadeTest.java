@@ -1,18 +1,13 @@
 package fasade;
 
 import entites.Companies;
-import entites.Coupon;
 import entites.Customer;
 import exceptions.AlreadyExistException;
 import exceptions.NotExistException;
 import exceptions.NotLoginException;
 import org.junit.Test;
-import pool.ConnectionPool;
 
 import java.util.List;
-import java.util.function.Predicate;
-
-import static org.junit.Assert.*;
 
 public class AdminFacadeTest {
 
@@ -77,7 +72,7 @@ public class AdminFacadeTest {
             e.printStackTrace();
         }
         try {
-            adminFacade.returnOneDeleteCompony(companies.getId());
+            adminFacade.returnOneDeleteCompany(companies.getId());
         } catch (NotExistException e) {
             e.printStackTrace();
         }

@@ -50,7 +50,6 @@ public class CouponsDBDAO implements CouponsDAO {
     }
 
 
-
     @Override
     public void update(Coupon coupon) {
         String sql = "UPDATE coupons SET CAT_ID= ?, TITEL= ?, DESCRIPTION= ?, " +
@@ -117,6 +116,36 @@ public class CouponsDBDAO implements CouponsDAO {
         return coupon;
     }
 
+
+    public List<Coupon> getAllCouponsExpired() {
+        List<Coupon> expired = null;
+        String sql = "SELECT * FROM coupons WHERE EDATE < CURRENT_DATE ";
+        Connection connection = pool.getConnection();
+        try (PreparedStatement prstm = connection.prepareStatement(sql)) {
+            //prstm.setDate(1, Date.valueOf(LocalDate.now().plusDays(2)));
+            ResultSet resultSet = prstm.executeQuery();
+            expired = new ArrayList<>();
+            while (resultSet.next()) {
+                long id = resultSet.getLong(1);
+                long com = resultSet.getLong(2);
+                long cat = resultSet.getLong(3);
+                String titel = resultSet.getString(4);
+                String description = resultSet.getString(5);
+                LocalDate start = resultSet.getDate(6).toLocalDate();
+                LocalDate end = resultSet.getDate(7).toLocalDate();
+                int amount = resultSet.getInt(8);
+                double price = resultSet.getDouble(9);
+                String image = resultSet.getString(10);
+                expired.add(new Coupon(id, com, cat, titel, description, start, end, amount, price, image));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            pool.returnConnetion(connection);
+        }
+        return expired;
+    }
+
     @Override
     public List<Coupon> getAllCoupons() {
         List<Coupon> all = null;
@@ -146,13 +175,13 @@ public class CouponsDBDAO implements CouponsDAO {
         return all;
     }
 
-    public List<Coupon> getAllCompnyCouponsByMaxPrice(Long com_id,Double maxPrice) {
+    public List<Coupon> getAllCompnyCouponsByMaxPrice(Long com_id, Double maxPrice) {
         List<Coupon> allCouponCompnyByMaxPrice = null;
         String sql = "SELECT * FROM coupons WHERE COM_ID= ? AND PRICE <= ?";
         Connection connection = pool.getConnection();
         try (PreparedStatement prdtm = connection.prepareStatement(sql)) {
-            prdtm.setLong(1,com_id);
-            prdtm.setDouble(2,maxPrice);
+            prdtm.setLong(1, com_id);
+            prdtm.setDouble(2, maxPrice);
             ResultSet resultSet = prdtm.executeQuery();
             allCouponCompnyByMaxPrice = new ArrayList<>();
             while (resultSet.next()) {
@@ -176,13 +205,13 @@ public class CouponsDBDAO implements CouponsDAO {
         return allCouponCompnyByMaxPrice;
     }
 
-    public List<Coupon> getAllCompnyCouponsByType(Long com_id,Long categoryId) {
+    public List<Coupon> getAllCompnyCouponsByType(Long com_id, Long categoryId) {
         List<Coupon> allCouponCompnyType = null;
         String sql = "SELECT * FROM coupons WHERE COM_ID= ? AND CAT_ID= ?";
         Connection connection = pool.getConnection();
         try (PreparedStatement prdtm = connection.prepareStatement(sql)) {
             prdtm.setLong(1, com_id);
-            prdtm.setLong(2,categoryId);
+            prdtm.setLong(2, categoryId);
             ResultSet resultSet = prdtm.executeQuery();
             allCouponCompnyType = new ArrayList<>();
             while (resultSet.next()) {
@@ -236,20 +265,20 @@ public class CouponsDBDAO implements CouponsDAO {
     }
 
 
-    public Boolean isCouponExistsByCompanyAndTitel(Long companyId, Coupon coupon){
-        Boolean isExists=false;
+    public Boolean isCouponExistsByCompanyAndTitel(Long companyId, Coupon coupon) {
+        Boolean isExists = false;
         String sql = "SELECT * FROM coupons WHERE COM_ID = ? AND TITEL = ?";
         Connection connection = pool.getConnection();
         try (PreparedStatement prstm = connection.prepareStatement(sql)) {
             prstm.setLong(1, companyId);
             prstm.setString(2, coupon.getTitle());
             ResultSet resultSet = prstm.executeQuery();
-            if(resultSet.next()){
-                isExists=true;
+            if (resultSet.next()) {
+                isExists = true;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             pool.returnConnetion(connection);
         }
         return isExists;

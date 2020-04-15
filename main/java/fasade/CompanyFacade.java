@@ -8,18 +8,15 @@ import exceptions.AlreadyExistException;
 import exceptions.DoubelCouponsException;
 import exceptions.NotExistException;
 import exceptions.NotLoginException;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 public class CompanyFacade extends ClientFacade {
 
     private CategoryDBDAO categoryDBDAO = new CategoryDBDAO();
     private Long companyId = null;
-    //private Predicate<Long> isLoggedIn = Objects::nonNull;
 
-    //login
+    // this method let you login as a company by enter email and password
     @Override
     public Boolean login(String email, String password) {
         if (companiesDBDAO.isCompanyExists(email, password)) {
@@ -31,6 +28,7 @@ public class CompanyFacade extends ClientFacade {
         return companyId != null;
     }
 
+    //  this method let you creat coupon by select category and seem info it take from the company
     public Coupon creatCoupon(Category category, String title, String description, LocalDate startDate
             , LocalDate endDate, int amount, double price, String image) throws NotLoginException, NotExistException {
         if (companyId == null) {
@@ -41,11 +39,10 @@ public class CompanyFacade extends ClientFacade {
         }
         Long categoryId = categoryDBDAO.getIdCategory(category);
         Coupon newCoupon = new Coupon(companyId, categoryId, title, description, startDate, endDate, amount, price, image);
-
         return newCoupon;
     }
 
-    //  add coupon is unique title for company
+    //  this method let you add coupon if is unique title for company
     public void addCoupon(Coupon coupon) throws NotLoginException, AlreadyExistException {
         if (companyId == null) {
             throw new NotLoginException("you need to login");
@@ -57,7 +54,7 @@ public class CompanyFacade extends ClientFacade {
             couponsDBDAO.addCoupon(coupon);
         }
     }
-
+    //  let you have a specific coupon by the index
     public Coupon getCouponById(Long id) {
         if (id != null) {
             Coupon coupon = couponsDBDAO.getOneCoupon(id);
@@ -68,7 +65,7 @@ public class CompanyFacade extends ClientFacade {
         return null;
     }
 
-    //public void updateCoupon(Coupon coupon)
+    // you can update coupon less id, and no titel if the company already have coupon with that titel
     public void updateCoupon(Coupon coupon) throws NotLoginException, DoubelCouponsException, NotExistException {
         if (companyId == null) {
             throw new NotLoginException("you need to login");
@@ -94,7 +91,7 @@ public class CompanyFacade extends ClientFacade {
         couponsDBDAO.update(original);
     }
 
-    //public void deleteCoupon(Long couponId)
+    // delete the coupon and all the purchase him
     public void deleteCoupon(Long couponId) throws NotLoginException, NotExistException {
         if (companyId == null) {
             throw new NotLoginException("you nees to login");
@@ -110,7 +107,7 @@ public class CompanyFacade extends ClientFacade {
         couponsDBDAO.delete(couponId);
     }
 
-    //public ArrayList<Coupon>getCompanyCoupons()
+    // return all company coupons
     public List<Coupon> getCompanyCoupons() throws NotLoginException {
         if (companyId == null) {
             throw new NotLoginException("you need to login");
@@ -119,7 +116,7 @@ public class CompanyFacade extends ClientFacade {
         return all;
     }
 
-    //public ArrayList<Coupon>getCompanyCoupons(Category category)
+    // return all the company coupons by category
     public List<Coupon> getCompanyCouponsByCategory(Category category) throws NotLoginException {
         List<Coupon> couponsByType = null;
         if (companyId == null) {
@@ -132,7 +129,7 @@ public class CompanyFacade extends ClientFacade {
         return couponsByType;
     }
 
-    //public ArrayList<Coupon>getCompanyCoupons(Double maxPrice)
+    // return all company coupons upto the price
     public List<Coupon> getCompanyCouponsByMaxPrice(Double maxPrice) throws NotLoginException {
         List<Coupon> allCompanyCouponsByMaxPrice = null;
         if (companyId == null) {
@@ -144,7 +141,7 @@ public class CompanyFacade extends ClientFacade {
         return allCompanyCouponsByMaxPrice;
     }
 
-    //public Companies getCompanyDetails()
+    //  return the company that login
     public Companies getCompanyDetails() throws NotLoginException {
         if(companyId==null){
             throw new NotLoginException("you need to login");

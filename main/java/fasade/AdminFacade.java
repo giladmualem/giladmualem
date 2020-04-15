@@ -9,7 +9,6 @@ import exceptions.NotLoginException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class AdminFacade extends ClientFacade {
     private Boolean isLogin = false;
@@ -17,7 +16,7 @@ public class AdminFacade extends ClientFacade {
     private List<Customer> deleteCustomers = null;
 
 
-    //login Boolean(String email,String password)
+    // let the admin to login
     @Override
     public Boolean login(String email, String password) {
         String theEmail = "admin@admin.com";
@@ -26,9 +25,7 @@ public class AdminFacade extends ClientFacade {
         return isLogin;
     }
 
-    //  not double email
-    //  not double name
-    //public void addCompany(Companies company)
+    //  you can add company unless email or name is already taken
     public void addCompany(Companies company) throws AlreadyExistException, NotLoginException {
         if (!isLogin) {
             throw new NotLoginException("you have to log in");
@@ -42,9 +39,7 @@ public class AdminFacade extends ClientFacade {
         companiesDBDAO.addCompany(company);
     }
 
-    //  not update id
-    //  not update name
-    //public void updateCompany(Companies company)
+    // you can update company except id and name
     public void updateCompany(Companies company) throws NotExistException, NotLoginException {
         if (!isLogin) {
             throw new NotLoginException("you have to log in");
@@ -58,10 +53,8 @@ public class AdminFacade extends ClientFacade {
         companiesDBDAO.updateCompany(companyById);
     }
 
-
-    //                                  not finish
-    //  delete coupones company
-    //  delete coupones customers
+    //  delete company with all the coupons and here purchase
+    //  save the company and here coupons if you regret
     public void deleteCompany(Companies companies) throws NotLoginException, NotExistException {
         if (!isLogin) {
             throw new NotLoginException("you need to login first");
@@ -73,9 +66,7 @@ public class AdminFacade extends ClientFacade {
         if (deleteCompanies == null) {
             deleteCompanies = new ArrayList<>();
         }
-        //       com.setCoupons(couponsDBDAO.getAllCompnyCoupons(companies.getId()));
         if (com != null) {
-//            System.out.println(com);
             com.setCoupons(couponsDBDAO.getAllCompnyCoupons(com.getId()));
             if (com != null) {
                 if (com.getCoupons() != null) {
@@ -94,9 +85,9 @@ public class AdminFacade extends ClientFacade {
         }
     }
 
-    //                          need to return the coupon of the company
-    //  get back one delete compony (id)
-    public void returnOneDeleteCompony(Long id) throws NotExistException {
+
+    // bring back the company and here coupons
+    public void returnOneDeleteCompany(Long id) throws NotExistException {
         Companies back = null;
         for (int i = 0; deleteCompanies != null && i < deleteCompanies.size(); i++) {
             if (deleteCompanies.get(i).getId() == id) {
@@ -114,6 +105,7 @@ public class AdminFacade extends ClientFacade {
         }
     }
 
+    //  return a company
     public Companies getOneCompany(Long id) throws NotLoginException, NotExistException {
         if (!isLogin) {
             throw new NotLoginException("you need to login");
@@ -126,7 +118,7 @@ public class AdminFacade extends ClientFacade {
         return theCompany;
     }
 
-    //  get back all delete componies
+    // return all the companies in the date ,not deleted
     public List<Companies> getAllCompanies() throws NotLoginException {
         if (!isLogin) {
             throw new NotLoginException("you nees to login");
@@ -134,7 +126,7 @@ public class AdminFacade extends ClientFacade {
         return companiesDBDAO.getAllCompanies();
     }
 
-    //public void addCustomer(Customer customer)
+    // add customer with unique email
     public void addCustomer(Customer customer) throws NotLoginException, AlreadyExistException {
         // only admin can preform
         if (!isLogin) {
@@ -144,18 +136,17 @@ public class AdminFacade extends ClientFacade {
         if (customersDBDAO.isCustemerExistByEmail(customer.getEmail())) {
             throw new AlreadyExistException("there already exists customer");
         }
-        //customersDBDAO.addCustomer(customer);
         customersDBDAO.addCustomer(customer);
     }
 
-    //public void updeateCustomer(Customer customer)
+    // update customer - email need to by unique
     public void updeateCustomer(Customer customer) throws NotLoginException, NotExistException, AlreadyExistException {
         // only admin can preform
         if (!isLogin) {
             throw new NotLoginException("you need to login");
         }
         // find a customer by id
-        if (customer.getId()==null) {
+        if (customer.getId() == null) {
             throw new NotExistException("send customer with id");
         }
         Customer orignal = customersDBDAO.getOneCustomer(customer.getId());
@@ -179,7 +170,8 @@ public class AdminFacade extends ClientFacade {
         }
     }
 
-    //public void deleteCustomer(Long customerId)
+    // delete customer with is purchase
+    // and save the customer in case you regret
     public void deleteCustomer(Long customerId) throws NotLoginException, NotExistException {
         //  login
         if (!isLogin) {
@@ -201,15 +193,16 @@ public class AdminFacade extends ClientFacade {
         // delete purchase
     }
 
-    //public ArrayList<Customer> getAllCustomers()
+    // return all the customer in the date - not deleted
     public List<Customer> getAllCustomers() throws NotLoginException {
         if (!isLogin) {
             throw new NotLoginException("you need to login");
         }
-        List<Customer> all = customersDBDAO.allCustomer();
-        return null;
+        return customersDBDAO.allCustomer();
+
     }
 
+    //  return one deleted customer back to the database  by id
     public void returnDeleteCustomer(Long id) throws NotLoginException, NotExistException {
         if (!isLogin) {
             throw new NotLoginException("you need to login");
@@ -227,6 +220,7 @@ public class AdminFacade extends ClientFacade {
         }
     }
 
+    //  return all the deleted customers back
     public void returnDeletesCustomers() throws NotLoginException, NotExistException {
         if (!isLogin) {
             throw new NotLoginException("you need to login");
@@ -244,7 +238,7 @@ public class AdminFacade extends ClientFacade {
             }
         }
     }
-
+    //  return one customer by id
     public Customer getOneCustomer(Long customerId) throws NotLoginException {
         if (!isLogin) {
             throw new NotLoginException("you nees to login");

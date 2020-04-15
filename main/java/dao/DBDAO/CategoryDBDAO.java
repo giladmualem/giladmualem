@@ -18,6 +18,8 @@ public class CategoryDBDAO implements CategoryDAO {
         pool = ConnectionPool.getInstance();
     }
 
+
+
     @Override
     public Boolean isExist(Category category) throws NotExistException {
         Boolean isExist = false;

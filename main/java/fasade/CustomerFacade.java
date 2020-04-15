@@ -5,17 +5,14 @@ import entites.Category;
 import entites.Coupon;
 import entites.Customer;
 import exceptions.*;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CustomerFacade extends ClientFacade {
     private CategoryDBDAO categoryDBDAO = new CategoryDBDAO();
     private Long clientId = null;
 
-    //public login
+    // confirm login to customer facade by email and password
     @Override
     public Boolean login(String email, String password) {
         if (customersDBDAO.isCustomerExists(email, password)) {
@@ -58,7 +55,7 @@ public class CustomerFacade extends ClientFacade {
         couponsDBDAO.update(coupon);
     }
 
-    //public ArrayList<Coupon> getAllCustomerCoupons()
+    // return all the coupons that customer purchase
     public List<Coupon> getAllCustomerCoupons() throws NotLoginException {
         if (clientId == null) {
             throw new NotLoginException("you need to login");
@@ -67,7 +64,7 @@ public class CustomerFacade extends ClientFacade {
         return all;
     }
 
-    //public ArrayList<Coupon> getCustomerCoupons(Category category)
+    // return all the coupons that customer purchase from specific category
     public List<Coupon> getCustomerCouponsByCategory(Category category) throws NotLoginException, NotExistException {
         if (clientId == null) {
             throw new NotLoginException("you need to login");
@@ -76,13 +73,11 @@ public class CustomerFacade extends ClientFacade {
         if (categoryId == null) {
             throw new NotExistException("you need enter category");
         }
-
         List<Coupon> couponsType = purchaseDBDAO.getCustomerCouponsByCategory(categoryId, clientId);
-
         return couponsType;
     }
 
-    //public ArrayList<Coupon> getCustomerCoupons(Double maxPrice)
+    // return all the coupons that customer purchase upto the price
     public List<Coupon> getCustomerCouponsMaxPrice(Double maxPrice) throws NotLoginException, NotExistException {
         if (clientId == null) {
             throw new NotLoginException("you need to login");

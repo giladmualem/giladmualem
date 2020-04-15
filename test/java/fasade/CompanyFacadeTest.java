@@ -28,8 +28,8 @@ public class CompanyFacadeTest {
         try {
             // Coupon coupon = companyFacade.creatCoupon(null, "cola", "6 pack", LocalDate.now()
             //       , LocalDate.now().plusDays(3), 40, 5.30, "www.cola.html");
-            companyFacade.addCoupon(companyFacade.creatCoupon(Category.FOOD, "www", "diner", LocalDate.now(), LocalDate.now().plusDays(1), 4, 55.5, "aaaa"));
-            companyFacade.couponsDBDAO.getOneCoupon(1L);
+            companyFacade.addCoupon(companyFacade.creatCoupon(Category.FOOD, "ggg", "diner", LocalDate.now(), LocalDate.now().plusDays(1), 4, 15.5, "aaaa"));
+        //    companyFacade.couponsDBDAO.getOneCoupon(1L);
         } catch (NotLoginException e) {
             e.printStackTrace();
         } catch (AlreadyExistException e) {
